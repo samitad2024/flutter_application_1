@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model/food_items.dart';
- 
+import 'package:provider/provider.dart';
+import 'package:flutter_application_1/provider/cart_provider.dart';
+
 class Home extends StatelessWidget {
   Home({super.key});
   final List<Map<String, String>> categories = [
-    {"name": "All", "image": "assets/kitfo.png"},
+    {"name": "Kitifo", "image": "assets/kitfo.png"},
     {"name": "Burger", "image": "assets/bruger.png"},
     {"name": "Pizza", "image": "assets/pizza.png"},
     {"name": "Dessert", "image": "assets/kitfo.png"},
@@ -40,7 +42,8 @@ class Home extends StatelessWidget {
                   children: [
                     Text(
                       "Menu",
-                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                     ),
                     CircleAvatar(
                       radius: 22,
@@ -51,7 +54,8 @@ class Home extends StatelessWidget {
                 const SizedBox(height: 24),
                 // Search Barkl
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.pink[50],
                     borderRadius: BorderRadius.circular(30),
@@ -62,7 +66,10 @@ class Home extends StatelessWidget {
                       SizedBox(width: 10),
                       Text(
                         "search",
-                        style: TextStyle(color: Colors.black38, fontSize: 20, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            color: Colors.black38,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -74,7 +81,8 @@ class Home extends StatelessWidget {
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: categories.length,
-                    separatorBuilder: (context, index) => const SizedBox(width: 16),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(width: 16),
                     itemBuilder: (context, index) {
                       final cat = categories[index];
                       return GestureDetector(
@@ -86,7 +94,8 @@ class Home extends StatelessWidget {
                                 child: Material(
                                   color: Colors.transparent,
                                   child: Container(
-                                    width: MediaQuery.of(context).size.width * 0.8,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.8,
                                     padding: const EdgeInsets.all(24.0),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -102,28 +111,56 @@ class Home extends StatelessWidget {
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Image.asset(cat["image"]!, width: 100, height: 100),
+                                        Image.asset(cat["image"]!,
+                                            width: 100, height: 100),
                                         const SizedBox(height: 16),
                                         Text(
                                           cat["name"]!,
-                                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                          style: const TextStyle(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                         const SizedBox(height: 8),
                                         Text(
                                           "Short description of ${cat["name"]}",
-                                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[600]),
                                         ),
                                         const SizedBox(height: 16),
                                         const Text(
                                           "\$20", // Replace with actual price if available
-                                          style: TextStyle(fontSize: 20, color: Colors.orange, fontWeight: FontWeight.bold),
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.orange,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                         const SizedBox(height: 10),
                                         ElevatedButton.icon(
-                                          icon: const Icon(Icons.add_shopping_cart),
+                                          icon: const Icon(
+                                              Icons.add_shopping_cart),
                                           label: const Text("Add to Cart"),
                                           onPressed: () {
-                                            // Add to cart logic here
+                                            final foodItem = FoodItem(
+                                              name: cat["name"]!,
+                                              description:
+                                                  "Short description of ${cat["name"]}",
+                                              price:
+                                                  "20", // or use a real price if available
+                                              imageUrl: cat["image"]!,
+                                            );
+                                            Provider.of<CartProvider>(context,
+                                                    listen: false)
+                                                .add(foodItem);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                    "${cat["name"]} added to cart!"),
+                                                duration:
+                                                    const Duration(seconds: 2),
+                                              ),
+                                            );
                                             Navigator.pop(context);
                                           },
                                         ),
@@ -135,12 +172,13 @@ class Home extends StatelessWidget {
                             },
                           );
                         },
-                   
                         child: Column(
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                color: index == 0 ? Colors.purple[100] : Colors.grey[200],
+                                color: index == 0
+                                    ? Colors.purple[100]
+                                    : Colors.grey[200],
                                 shape: BoxShape.circle,
                               ),
                               padding: const EdgeInsets.all(8),
@@ -151,7 +189,8 @@ class Home extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 6),
-                            Text(cat["name"]!, style: const TextStyle(fontSize: 14)),
+                            Text(cat["name"]!,
+                                style: const TextStyle(fontSize: 14)),
                           ],
                         ),
                       );
@@ -179,17 +218,22 @@ class Home extends StatelessWidget {
                           children: [
                             Text(
                               "Today's Offer",
-                              style: TextStyle(color: Colors.white70, fontSize: 16),
+                              style: TextStyle(
+                                  color: Colors.white70, fontSize: 16),
                             ),
                             SizedBox(height: 4),
                             Text(
                               "Free Box Of Fries",
-                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
                             ),
                             SizedBox(height: 4),
                             Text(
                               "on off order above \$150",
-                              style: TextStyle(color: Colors.white70, fontSize: 14),
+                              style: TextStyle(
+                                  color: Colors.white70, fontSize: 14),
                             ),
                           ],
                         ),
@@ -238,12 +282,16 @@ class Home extends StatelessWidget {
                               const SizedBox(height: 8),
                               Text(
                                 item.name,
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 "\$${item.price}",
-                                style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 16),
+                                style: const TextStyle(
+                                    color: Colors.orange,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16),
                               ),
                               const SizedBox(height: 4),
                               Container(
@@ -252,9 +300,19 @@ class Home extends StatelessWidget {
                                   shape: BoxShape.circle,
                                 ),
                                 child: IconButton(
-                                  icon: const Icon(Icons.add, color: Colors.green),
+                                  icon: const Icon(Icons.add,
+                                      color: Colors.green),
                                   onPressed: () {
-                                    // Add to cart logic
+                                    Provider.of<CartProvider>(context,
+                                            listen: false)
+                                        .add(item);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content:
+                                            Text("${item.name} added to cart!"),
+                                        duration: const Duration(seconds: 2),
+                                      ),
+                                    );
                                   },
                                 ),
                               ),

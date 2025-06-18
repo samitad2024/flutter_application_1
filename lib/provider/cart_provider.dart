@@ -2,18 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model/food_items.dart';
 
 class CartProvider with ChangeNotifier {
-  final List<FoodItem> _items = [];
-  List<FoodItem> get items => _items;
+  final Map<FoodItem, int> _items = {};
 
-  void  add(FoodItem item) {
-    _items.add(item);
+  Map<FoodItem, int> get items => _items;
+
+  void add(FoodItem item) {
+    if (_items.containsKey(item)) {
+      _items[item] = _items[item]! + 1;
+    } else {
+      _items[item] = 1;
+    }
     notifyListeners();
   }
+
   void remove(FoodItem item) {
-    _items.remove(item);
-    notifyListeners();
+    if (_items.containsKey(item)) {
+      _items.remove(item);
+      notifyListeners();
+    }
   }
+
+  void increaseQuantity(FoodItem item) {
+    if (_items.containsKey(item)) {
+      _items[item] = _items[item]! + 1;
+      notifyListeners();
+    }
+  }
+
+  void decreaseQuantity(FoodItem item) {
+    if (_items.containsKey(item) && _items[item]! > 1) {
+      _items[item] = _items[item]! - 1;
+      notifyListeners();
+    } else {
+      remove(item);
+    }
+  }
+
   double get totalPrice {
-    return _items.fold(0.0, (sum, item) => sum + double.parse(item.price));
+    double total = 0.0;
+    _items.forEach((item, qty) {
+      total += double.parse(item.price) * qty;
+    });
+    return total;
   }
 }
