@@ -56,7 +56,6 @@ class _MyHomePageState extends State<MyHomePage> {
     CartScreen(),
     Center(child: Text('Favorites')), // Replace with your Favorites screen
     Center(child: Text('Search')), // Replace with your Search screen
-    Center(child: Text('Login (Admin)')), // Replace with your Login screen
   ];
 
   void _onItemTapped(int index) {
@@ -91,10 +90,6 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.login),
-            label: 'Login',
           ),
         ],
         currentIndex: _selectedIndex,

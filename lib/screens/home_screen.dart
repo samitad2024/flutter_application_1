@@ -37,22 +37,37 @@ class Home extends StatelessWidget {
               children: [
                 const SizedBox(height: 16),
                 // AppBar Row: Menu + Profile
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       "Menu",
-                      style:
-                          TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                     ),
-                    CircleAvatar(
-                      radius: 22,
-                      backgroundImage: AssetImage('assets/man.png'),
+                    Row(
+                      children: [
+                        TextButton.icon(
+                          style: TextButton.styleFrom(
+                            foregroundColor: Color(0xFF5B3DF5),
+                            textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          icon: const Icon(Icons.admin_panel_settings, size: 20),
+                          label: const Text('Admin'),
+                          onPressed: () {
+                            // TODO: Navigate to admin page or show admin dialog
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        CircleAvatar(
+                          radius: 22,
+                          backgroundImage: AssetImage('assets/man.png'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
                 const SizedBox(height: 24),
-                // Search Barkl
+                // Search Bar
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -140,29 +155,38 @@ class Home extends StatelessWidget {
                                           icon: const Icon(
                                               Icons.add_shopping_cart),
                                           label: const Text("Add to Cart"),
-                                          onPressed: () {
-                                            final foodItem = FoodItem(
-                                              name: cat["name"]!,
-                                              description:
-                                                  "Short description of ${cat["name"]}",
-                                              price:
-                                                  "20", // or use a real price if available
-                                              imageUrl: cat["image"]!,
-                                            );
-                                            Provider.of<CartProvider>(context,
-                                                    listen: false)
-                                                .add(foodItem);
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                    "${cat["name"]} added to cart!"),
-                                                duration:
-                                                    const Duration(seconds: 2),
-                                              ),
-                                            );
-                                            Navigator.pop(context);
-                                          },
+                                          onPressed: Provider.of<CartProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .items
+                                                  .keys
+                                                  .any((i) =>
+                                                      i.name == cat["name"])
+                                              ? null
+                                              : () {
+                                                  final foodItem = FoodItem(
+                                                    name: cat["name"]!,
+                                                    description:
+                                                        "Short description of ${cat["name"]}",
+                                                    price:
+                                                        "20", // or use a real price if available
+                                                    imageUrl: cat["image"]!,
+                                                  );
+                                                  Provider.of<CartProvider>(
+                                                          context,
+                                                          listen: false)
+                                                      .add(foodItem);
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                          "${cat["name"]} added to cart!"),
+                                                      duration: const Duration(
+                                                          seconds: 2),
+                                                    ),
+                                                  );
+                                                  Navigator.pop(context);
+                                                },
                                         ),
                                       ],
                                     ),
@@ -302,18 +326,20 @@ class Home extends StatelessWidget {
                                 child: IconButton(
                                   icon: const Icon(Icons.add,
                                       color: Colors.green),
-                                  onPressed: () {
-                                    Provider.of<CartProvider>(context,
-                                            listen: false)
-                                        .add(item);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content:
-                                            Text("${item.name} added to cart!"),
-                                        duration: const Duration(seconds: 2),
-                                      ),
-                                    );
-                                  },
+                                  onPressed: Provider.of<CartProvider>(context, listen: false).items.keys.any((i) => i.name == item.name)
+                                      ? null
+                                      : () {
+                                          Provider.of<CartProvider>(context,
+                                                  listen: false)
+                                              .add(item);
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content:
+                                                  Text("${item.name} added to cart!"),
+                                              duration: const Duration(seconds: 2),
+                                            ),
+                                          );
+                                        },
                                 ),
                               ),
                             ],
