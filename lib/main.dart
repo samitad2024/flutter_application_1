@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'package:device_preview/device_preview.dart';
 
@@ -6,7 +7,11 @@ import 'provider/cart_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/cart_screen.dart';
 
-void main() {
+void main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
     DevicePreview(
       enabled: true,
